@@ -19,7 +19,7 @@ public interface IProductService {
     ServerResponse set_sale_status(Integer productId, Integer status);
 
     /**
-     * 查看商品详情
+     * 查看后台商品详情
      * */
     ServerResponse detail(Integer productId);
 
@@ -38,4 +38,13 @@ public interface IProductService {
      * */
     ServerResponse upload(MultipartFile file, String path);
 
+    /**
+     * 查看前台商品详情
+     * */
+    ServerResponse detail_protal(Integer productId);
+
+    /**
+     * 前台商品搜索
+     * */
+    ServerResponse list_protal(Integer categoryId, String keyword, Integer pageNum, Integer pageSize, String orderby);
 }

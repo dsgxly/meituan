@@ -4,6 +4,7 @@ import com.itdr.pojo.Product;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductMapper {
     /**
@@ -58,5 +59,9 @@ public interface ProductMapper {
     List<Product>  findProductByPnameOrPid(@Param("productId") Integer productId,
                                            @Param("ProductName") String ProductName);
 
-
+    /**
+     * 前台接口-搜索商品
+     * */
+    List<Product> searchProduct(@Param("integerSet") Set<Integer> integerSet,
+                                @Param("keyword") String keyword);
 }

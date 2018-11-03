@@ -80,4 +80,5 @@
   <select id="slectSameChildNode" parameterType="string" resultType="int">
     select count(1) from neuedu_category where name=#{categoryName}
   </select>
+
 </mapper>

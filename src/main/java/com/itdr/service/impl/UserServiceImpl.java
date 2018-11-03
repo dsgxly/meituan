@@ -203,9 +203,9 @@ public class UserServiceImpl implements IUserService {
         //2.根据usernamehe passwordOld
 
         UserInfo userInfo = userInfoMapper.selectUserInfoByUsernameAndPassword(username,MD5Utils.getMD5Code(passwordOld));
-       if(userInfo==null){
-           return ServerResponse.createByError("旧密码错误");
-       }
+        if(userInfo==null){
+            return ServerResponse.createByError("旧密码错误");
+        }
         //3.修改密码
         userInfo.setPassword(MD5Utils.getMD5Code(passwordNew));
         int result = userInfoMapper.updateByPrimaryKey(userInfo);

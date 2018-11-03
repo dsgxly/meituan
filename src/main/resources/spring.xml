@@ -36,7 +36,7 @@
                 </bean>
             </array>
         </property>
-     </bean>
+    </bean>
 
 
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

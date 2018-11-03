@@ -65,7 +65,7 @@ public class UserController {
         return serverResponse;
     }
     /**
-        * 忘记密码重置密码
+     * 忘记密码重置密码
      */
     @RequestMapping(value = "/forget_reset_password.do")
     public ServerResponse forget_reset_password(String username,String newpassword,String forgetToken){

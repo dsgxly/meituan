@@ -7,7 +7,7 @@
     <properties resource="db.properties"></properties>
     <!--MySQL驱动包的位置-->
     <classPathEntry location="${db.mysql.Location}"/>
-    
+
     <context id="context" targetRuntime="MyBatis3Simple">
         <commentGenerator>
             <property name="suppressAllComments" value="false"/>
@@ -38,9 +38,9 @@
 
         <!--配置数据表-->
         <table tableName="neuedu_user" domainObjectName="UserInfo" enableCountByExample="false" enableDeleteByExample="false"
-        enableSelectByExample="false" enableUpdateByExample="false"/>
+               enableSelectByExample="false" enableUpdateByExample="false"/>
         <table tableName="neuedu_category" domainObjectName="Category" enableCountByExample="false" enableDeleteByExample="false"
-        enableSelectByExample="false" enableUpdateByExample="false"/>
+               enableSelectByExample="false" enableUpdateByExample="false"/>
         <table tableName="neuedu_product" domainObjectName="Product" enableCountByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false"/>
         <table tableName="neuedu_cart" domainObjectName="Cart" enableCountByExample="false" enableDeleteByExample="false"

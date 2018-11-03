@@ -1,6 +1,8 @@
 package com.itdr.dao;
 
 import com.itdr.pojo.Product;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface ProductMapper {
@@ -43,4 +45,18 @@ public interface ProductMapper {
      * @mbg.generated Mon Oct 29 15:48:44 CST 2018
      */
     int updateByPrimaryKey(Product record);
+
+    /*
+    *更新商品
+    **/
+    int updateProductKeyBySelective(Product product);
+
+    /*
+     *按照productName或productId查找
+     **/
+
+    List<Product>  findProductByPnameOrPid(@Param("productId") Integer productId,
+                                           @Param("ProductName") String ProductName);
+
+
 }

@@ -6,8 +6,8 @@ import com.itdr.pojo.UserInfo;
 public interface IUserService {
 
     /*
-    * 登录接口
-    */
+     * 登录接口
+     */
     ServerResponse login(String username,String password);
 
     /*

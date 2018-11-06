@@ -1,6 +1,8 @@
 package com.itdr.dao;
 
 import com.itdr.pojo.Cart;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface CartMapper {
@@ -43,4 +45,38 @@ public interface CartMapper {
      * @mbg.generated Mon Oct 29 15:48:44 CST 2018
      */
     int updateByPrimaryKey(Cart record);
+
+    /**根据productId和userId查询购物信息*/
+    Cart selectCartByUserIdAndProductId(@Param("userId") Integer userId,
+                                        @Param("productId") Integer productId);
+
+    /**
+     *查询用户购物车信息
+     **/
+    List<Cart> selectCartByUserId(Integer userId);
+
+    /**
+     *统计用户购物信息是否全选
+     * 如果返回值大于0，则未全选
+     **/
+    int isCheckedAll(Integer userId);
+
+    /**
+     * 删除购物车中某些商品
+     * */
+    int deleteByUserIdAndProductIds(@Param("userId") Integer userId,
+                                    @Param("productIdList") List<Integer> productIdList);
+
+    /**
+     * 操作购物车商品是否选中
+     *@Param("check") Integer check 1.:选中  0;未选中
+     * */
+    int selectOrUnselectProduct(@Param("userId") Integer userId,
+                                @Param("productId") Integer productId,
+                                @Param("check") Integer check);
+
+    /**
+     * 统计用户购物车中产品数量
+     * */
+    int get_cart_product_count(Integer usrId);
 }

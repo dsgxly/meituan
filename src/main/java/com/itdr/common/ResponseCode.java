@@ -11,7 +11,9 @@ public enum ResponseCode {
     NO_PRIVILEGE(3,"无权限操作"),
     PRODUCT_ONLINE(1,"在售"),
     PRODUCT_OFFLINE(2,"下架"),
-    PRODUCT_DELETE(3,"删除")
+    PRODUCT_DELETE(3,"删除"),
+    PRODUCT_CHECKED(1,"已勾选"),
+    PRODUCT_UMCHECKED(0,"未勾选")
     ;
     private final int code;
     private final String desc;

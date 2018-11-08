@@ -1,6 +1,8 @@
 package com.itdr.dao;
 
 import com.itdr.pojo.Shopping;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface ShoppingMapper {
@@ -43,4 +45,12 @@ public interface ShoppingMapper {
      * @mbg.generated Mon Oct 29 15:48:44 CST 2018
      */
     int updateByPrimaryKey(Shopping record);
+
+    /**
+     * 根据shoppingId和userId删除地址
+     * */
+   int deleteByuserIdAndShoppingId(@Param("userId") Integer userId,
+                                   @Param("shoppingId") Integer shoppingId);
+
+   int updateBySelectiveKey(Shopping shopping);
 }

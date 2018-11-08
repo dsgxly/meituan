@@ -42,7 +42,7 @@ public class ProductServiceImpl implements IProductService {
 
         //1.参数的非空校验
         if(product==null){
-            return ServerResponse.createByError("参数为空");
+            return ServerResponse.createByError("参数不能为空");
         }
 
         //2.设置商品的主图  sub_image --> 1. .jpg  2. .png  3. .jpg 主图，我只需要取第一张就可以

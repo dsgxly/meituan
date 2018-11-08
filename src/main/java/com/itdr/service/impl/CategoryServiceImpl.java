@@ -129,7 +129,7 @@ public class CategoryServiceImpl implements ICategoruService {
         List<Category> categoryList = categoryMapper.findChildCategory(categoryId);
         if(categoryList!=null&&categoryList.size()>0){
             for (Category category1:categoryList
-                 ) {
+                    ) {
                 findAllChildCategory(categorySet,category1.getId());
             }
         }

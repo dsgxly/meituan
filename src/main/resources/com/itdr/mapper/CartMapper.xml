@@ -113,5 +113,19 @@
   <select id="get_cart_product_count" parameterType="int" resultType="int">
     select ifnull(sum(quantity),0) from neuedu_cart where user_id=#{userId}
   </select>
-  
+
+  <select id="findCartListByUserIdChecked" parameterType="int" resultMap="BaseResultMap">
+     select id, user_id, product_id, quantity, checked, create_time, update_time
+    from neuedu_cart
+    where user_id = #{userId} and checked=1
+  </select>
+  <delete id="deleteBatch" parameterType="list">
+    delete from neuedu_cart
+    <where>
+      id in
+      <foreach collection="list" item="cart" open="(" close=")" separator=",">
+        #{cart.id}
+      </foreach>
+    </where>
+  </delete>
 </mapper>

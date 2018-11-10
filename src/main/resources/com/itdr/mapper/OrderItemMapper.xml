@@ -101,4 +101,12 @@
     quantity, total_price, create_time, update_time
     from neuedu_order_item
   </select>
+
+  <select id="findOrderItemByOrderNo" parameterType="long" resultMap="BaseResultMap">
+    select id, user_id, order_no, product_id, product_name, product_image, current_unit_price,
+    quantity, total_price, create_time, update_time
+    from neuedu_order_item
+    where order_no = #{orderNo}
+  </select>
+
 </mapper>

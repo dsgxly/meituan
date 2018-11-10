@@ -1,6 +1,8 @@
 package com.itdr.dao;
 
 import com.itdr.pojo.Order;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface OrderMapper {
@@ -43,4 +45,12 @@ public interface OrderMapper {
      * @mbg.generated Mon Oct 29 15:48:44 CST 2018
      */
     int updateByPrimaryKey(Order record);
+
+
+    Order findOrderByUserIdAndOrderNo(@Param("userId") Integer userId,
+                                      @Param("orderNo") Long orderNo);
+
+    Order findOrderByOrderNo(Long orderNo);
+
+    List<Order>  findOrderByUserId(Integer userId);
 }

@@ -27,7 +27,8 @@ public class ProductController {
      * 前台-搜索商品并排序
      **/
     @RequestMapping(value = "/list.do")
-    public ServerResponse list_protal(@RequestParam(required = false) Integer categoryId,
+    public ServerResponse list_protal(
+                               @RequestParam(required = false) Integer categoryId,
                                @RequestParam(required = false) String keyword,
                                @RequestParam(required = false,defaultValue = "1") Integer pageNum,
                                @RequestParam(required = false,defaultValue = "5") Integer pageSize,

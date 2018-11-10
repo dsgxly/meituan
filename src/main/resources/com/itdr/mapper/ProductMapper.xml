@@ -142,6 +142,7 @@
     update_time, sub_images, detail
     from neuedu_product
     <where>
+      status=1
       <if test="integerSet!=null and integerSet.size()>0">
         and category_id in
         <foreach collection="integerSet" item="categoryId" open="(" close=")" separator=",">

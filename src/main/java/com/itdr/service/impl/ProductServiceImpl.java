@@ -14,6 +14,7 @@ import com.itdr.pojo.Product;
 import com.itdr.service.ICategoruService;
 import com.itdr.service.IProductService;
 import com.itdr.utils.DateUtils;
+import com.itdr.utils.FTPUtil;
 import com.itdr.utils.PropertiesUtils;
 import com.itdr.vo.ProductDetailVO;
 import com.itdr.vo.ProductListVO;
@@ -238,9 +239,15 @@ public class ProductServiceImpl implements IProductService {
             file.transferTo(file1);
             //将图片上传到图片服务器。。。。
 
+            FTPUtil.uploadFile(Lists.<File>newArrayList(file1));
+
             Map<String,String> map = Maps.newHashMap();
             map.put("uri",newFileName);
             map.put("url",PropertiesUtils.readByKey("imageHost")+"/"+newFileName);
+
+            //删除应用服务器上的图片
+            file1.delete();
+
             return ServerResponse.createBySuccess(map);
         } catch (IOException e) {
             e.printStackTrace();

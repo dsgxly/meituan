@@ -1,6 +1,8 @@
 package com.itdr.dao;
 
 import com.itdr.pojo.OrderItem;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface OrderItemMapper {
@@ -46,4 +48,10 @@ public interface OrderItemMapper {
 
     //订单明细批量插入
     int insertBatch(List<OrderItem> orderItemList);
+
+    List<OrderItem> findOrderItemByOrderNo(Long orderNo);
+
+    OrderItem findOrderByUserIdAndOrderNo(@Param("userId") Integer userId,
+                                          @Param("orderNo") Long orderNo);
+
 }

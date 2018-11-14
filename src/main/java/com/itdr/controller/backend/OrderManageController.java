@@ -26,13 +26,7 @@ public class OrderManageController {
                                @RequestParam(required = false, defaultValue = "10") Integer pageSize ){
 
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        if(userInfo==null){
-            return ServerResponse.createByError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
-        }
-        //判断用户权限
-        if(userInfo.getRole()!=ResponseCode.ROLE_ADMIN.getCode()){
-            return ServerResponse.createByError(ResponseCode.NO_PRIVILEGE.getCode(),ResponseCode.NO_PRIVILEGE.getDesc());
-        }
+
         return orderService.list(userInfo.getId(),pageNum,pageSize);
 
     }
@@ -41,16 +35,8 @@ public class OrderManageController {
      * 订单发货
      * */
     @RequestMapping(value = "/send_goods.do")
-    public ServerResponse send_goods(HttpSession session,Long orderNo){
+    public ServerResponse send_goods(Long orderNo){
 
-        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        if(userInfo==null){
-            return ServerResponse.createByError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
-        }
-        //判断用户权限
-        if(userInfo.getRole()!=ResponseCode.ROLE_ADMIN.getCode()){
-            return ServerResponse.createByError(ResponseCode.NO_PRIVILEGE.getCode(),ResponseCode.NO_PRIVILEGE.getDesc());
-        }
         return orderService.send_goods(orderNo);
 
     }

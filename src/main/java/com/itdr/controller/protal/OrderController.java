@@ -9,13 +9,13 @@ import com.itdr.common.ServerResponse;
 import com.itdr.pojo.UserInfo;
 import com.itdr.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -38,12 +38,33 @@ public class OrderController {
 
         return orderService.create(userInfo.getId(),shoppingId);
     }
+    @RequestMapping(value = "/create/shoppingId/{shoppingId}")
+    public ServerResponse createOrder_restful(HttpSession session,@PathVariable("shoppingId") Integer shoppingId){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+
+        return orderService.create(userInfo.getId(),shoppingId);
+    }
 
     /**
      * 取消订单
      * */
     @RequestMapping(value = "/cancel.do")
     public ServerResponse cancel(HttpSession session,Long orderNo){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+
+        return orderService.cancel(userInfo.getId(),orderNo);
+    }
+
+    @RequestMapping(value = "/cancel/orderNo/{orderNo}")
+    public ServerResponse cancel_restful(HttpSession session,@PathVariable("orderNo") Long orderNo){
 
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null){
@@ -96,11 +117,32 @@ public class OrderController {
         return orderService.detail(userInfo.getId(),orderNo);
     }
 
+    @RequestMapping(value = "/detail/orderNo/{orderNo}")
+    public ServerResponse detail_restful(HttpSession session,@PathVariable("orderNo") Long orderNo){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+
+        return orderService.detail(userInfo.getId(),orderNo);
+    }
+
     /**
      * 支付接口
      * */
     @RequestMapping(value = "/pay.do")
     public ServerResponse pay(HttpSession session,Long orderNo){
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+
+        return orderService.pay(userInfo.getId(),orderNo);
+    }
+
+    @RequestMapping(value = "/pay/orderNo/{orderNo}")
+    public ServerResponse pay_restful(HttpSession session,@PathVariable("orderNo") Long orderNo){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null){
             return ServerResponse.createByError("请登录");
@@ -157,6 +199,17 @@ public class OrderController {
      * */
     @RequestMapping(value = "/query_order_pay_status.do")
     public ServerResponse query_order_pay_status(HttpSession session, Long orderNo){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo == null){
+            return ServerResponse.createBySuccess("需要登录");
+        }
+
+        return orderService.query_order_pay_status(orderNo);
+    }
+
+    @RequestMapping(value = "/query_order_pay_status/orderNo/{orderNo}")
+    public ServerResponse query_order_pay_status_restful(HttpSession session, @PathVariable("orderNo") Long orderNo){
 
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo == null){

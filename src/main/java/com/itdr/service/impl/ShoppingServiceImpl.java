@@ -9,6 +9,7 @@ import com.itdr.pojo.Shopping;
 import com.itdr.service.IShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class ShoppingServiceImpl implements IShoppingService {
     @Autowired
     ShoppingMapper shoppingMapper;
 
+    @Transactional
     @Override
     public ServerResponse add(Integer userId, Shopping shopping) {
 
@@ -28,7 +30,7 @@ public class ShoppingServiceImpl implements IShoppingService {
             return ServerResponse.createByError("参数不能为空");
         }
         //2.添加收货信息
-        shopping.setId(userId);
+        shopping.setUserId(userId);
         int result = shoppingMapper.insert(shopping);
         if(result<=0){
             return ServerResponse.createByError("新建地址失败");
@@ -40,6 +42,7 @@ public class ShoppingServiceImpl implements IShoppingService {
 
     }
 
+    @Transactional
     @Override
     public ServerResponse del(Integer userId, Integer shoppingId) {
         //1.参数非空校验
@@ -55,6 +58,7 @@ public class ShoppingServiceImpl implements IShoppingService {
        return ServerResponse.createByError("删除地址失败");
     }
 
+    @Transactional
     @Override
     public ServerResponse update(Shopping shopping) {
 

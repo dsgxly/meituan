@@ -7,6 +7,7 @@ import com.itdr.pojo.Category;
 import com.itdr.service.ICategoruService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,7 @@ public class CategoryServiceImpl implements ICategoruService {
         return ServerResponse.createBySuccess(categoryList);
     }
 
+    @Transactional
     @Override
     public ServerResponse add_category(Integer parentId, String categoryName) {
 
@@ -71,6 +73,7 @@ public class CategoryServiceImpl implements ICategoruService {
         return ServerResponse.createByError("添加失败");
     }
 
+    @Transactional
     @Override
     public ServerResponse set_category_name(Integer categoryId, String categoryName) {
 

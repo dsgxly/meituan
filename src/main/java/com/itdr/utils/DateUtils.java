@@ -23,7 +23,7 @@ public class DateUtils {
     public static String dateToStr(Date date){
         //用到之前下载的joda.time依赖下的包 DateTime
         DateTime dateTime = new DateTime(date);
-        return dateTime.toString();
+        return dateTime.toString(STNDARD_FORMAT);
     }
 
     /**

@@ -9,6 +9,7 @@ import com.itdr.utils.MD5Utils;
 import com.itdr.utils.TokenCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -49,6 +50,7 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createBySuccess("登录成功",userInfo);
     }
 
+    @Transactional
     @Override
     public ServerResponse register(UserInfo userInfo) {
         //1.参数的非空校验
@@ -119,12 +121,13 @@ public class UserServiceImpl implements IUserService {
         }
 
         //3.服务端要生成一个token保存，并将token返回给客户端
-        String forgetToken = UUID.randomUUID().toString();      //当值用户横向越权修改别人密码
+        String forgetToken = UUID.randomUUID().toString();      //防止用户横向越权修改别人密码
         //guava cache
         TokenCache.set(username,forgetToken);
         return ServerResponse.createBySuccess(forgetToken);
     }
 
+    @Transactional
     @Override
     public ServerResponse forget_reset_password(String username, String newpassword, String forgetToken) {
 
@@ -190,6 +193,7 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    @Transactional
     @Override
     public ServerResponse reset_password(String username,String passwordOld, String passwordNew) {
 
@@ -217,6 +221,8 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+
+    @Transactional
     @Override
     public ServerResponse update_information(UserInfo user) {
 
@@ -237,6 +243,20 @@ public class UserServiceImpl implements IUserService {
 
         return userInfoMapper.selectByPrimaryKey(id);
 
+    }
+
+    @Transactional
+    @Override
+    public int updateTokenByUserId(Integer id, String token) {
+        return userInfoMapper.updateTokenByUserId(id,token);
+    }
+
+    @Override
+    public UserInfo findUserInfoByToken(String autoLoginToken) {
+        if(autoLoginToken==null||autoLoginToken.equals("")){
+            return  null;
+        }
+        return userInfoMapper.findUserInfoByToken(autoLoginToken);
     }
 
 

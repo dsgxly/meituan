@@ -47,8 +47,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -70,6 +71,7 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     PayInfoMapper payInfoMapper;
 
+    @Transactional
     @Override
     public ServerResponse create(Integer userId,Integer shoppingId) {
 
@@ -94,6 +96,9 @@ public class OrderServiceImpl implements IOrderService {
         }
         orderTotalPrice = getOrderTotalPrice(orderItemList);
         Order order = createOrder(userId,shoppingId,orderTotalPrice);
+
+        //int a = 3/0;
+
         if(order==null){
             return ServerResponse.createByError("订单创建失败");
         }
@@ -115,9 +120,11 @@ public class OrderServiceImpl implements IOrderService {
         OrderVO orderVO = assembleOrderVO(order,orderItemList,shoppingId);
         return ServerResponse.createBySuccess(orderVO);
     }
-/**
- * 取消订单
- * */
+
+    /**
+    * 取消订单
+    * */
+    @Transactional
     @Override
     public ServerResponse cancel(Integer userId, Long orderNo) {
 
@@ -205,7 +212,6 @@ public class OrderServiceImpl implements IOrderService {
             orderVOList.add(orderVO);
         }
         PageInfo pageInfo = new PageInfo(orderVOList);
-
         return ServerResponse.createBySuccess(pageInfo);
     }
 
@@ -234,6 +240,7 @@ public class OrderServiceImpl implements IOrderService {
     /**
      * 后台-订单发货
      * */
+    @Transactional
     @Override
     public ServerResponse send_goods(Long orderNo) {
 
@@ -331,6 +338,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     //购物车中清空已选择的商品
+    @Transactional
     private void cleanCart(List<Cart> cartList){
         //批量删除
         if(cartList!=null&&cartList.size()>0){
@@ -339,6 +347,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     //扣库存
+    @Transactional
     private void reduceProductStock(List<OrderItem> orderItemList){
         if(orderItemList!=null&&orderItemList.size()>0){
              for(OrderItem orderItem:orderItemList){
@@ -354,6 +363,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     //还原库存
+    @Transactional
     private void backProductStock(List<OrderItem> orderItemList){
         if(orderItemList!=null&&orderItemList.size()>0){
             for(OrderItem orderItem:orderItemList){
@@ -378,6 +388,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     //创建订单的方法
+    @Transactional
     private Order createOrder(Integer userId, Integer shoppingId, BigDecimal orderTotalPrice){
         Order order = new Order();
         //需要生成一个唯一的订单编号
@@ -399,7 +410,7 @@ public class OrderServiceImpl implements IOrderService {
 
     //生成订单编号的方法
     private Long generatorOrderNO(){
-        //适用于少量y用户，并发少的状况
+        //适用于少量用户，并发少的状况
         return System.currentTimeMillis()+new Random().nextInt(100);
     }
 
@@ -457,6 +468,7 @@ public class OrderServiceImpl implements IOrderService {
         return ServerResponse.createByError("下单失败");
     }
 
+    @Transactional
     @Override
     public ServerResponse alipay_callback(Map<String, String> requestparam) {
 /*        System.out.println("----------------");
@@ -498,6 +510,7 @@ public class OrderServiceImpl implements IOrderService {
         PayInfo payInfo = new PayInfo();
         payInfo.setOrderNo(orderNo);
         payInfo.setPayPlatform(Const.PaymentPlatformEnum.ALIPAY.getCode());
+        payInfo.setPlatformNumber(trade_no);
         payInfo.setPlatformStatus(trade_status);
         payInfo.setUserId(order.getUserId());
 
@@ -523,6 +536,36 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         return ServerResponse.createBySuccess(false);
+    }
+
+    @Transactional
+    @Override
+    public void closeOrder(String date) {
+        //查询订单时间 ,条件是小于time并且未付款的订单
+        List<Order> orderList = orderMapper.findOrderByCreateTime(ResponseCode.Order.ORDER_UN_PAY.getCode(),date);
+        if(orderList!=null&&orderList.size()>0){
+            for(Order order : orderList){
+                List<OrderItem> orderItemList = orderItemMapper.findOrderItemByOrderNo(order.getOrderNo());
+                if(orderItemList!=null&&orderItemList.size()>0){
+                    for(OrderItem orderItem:orderItemList){
+                        Integer stock = productMapper.findStockByProductId(orderItem.getProductId());
+                        if(stock==null){
+                            continue;
+                        }
+                        //更新商品库存
+                        stock = stock+orderItem.getQuantity();
+                        Product product = new Product();
+                        product.setId(orderItem.getProductId());
+                        product.setStock(stock);
+                        productMapper.updateProductKeyBySelective(product);
+                    }
+                }
+                //关闭订单
+                order.setStatus(ResponseCode.Order.ORDER_CANCELED.getCode());
+                order.setCloseTime(new Date());
+                orderMapper.updateByPrimaryKey(order);
+            }
+        }
     }
 
     /////////////////////////////支付相关///////////////////////////////
@@ -894,7 +937,8 @@ public class OrderServiceImpl implements IOrderService {
                 .setUndiscountableAmount(undiscountableAmount).setSellerId(sellerId).setBody(body)
                 .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                 .setTimeoutExpress(timeoutExpress)
-                .setNotifyUrl("http://k7kh8p.natappfree.cc/order/alipay_callback.do")//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+               // .setNotifyUrl("http://k7kh8p.natappfree.cc/order/alipay_callback.do")//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+                .setNotifyUrl("http://39.105.36.227:9999/meituan/order/alipay_callback.do")
                 .setGoodsDetailList(goodsDetailList);
 
         AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
@@ -906,7 +950,9 @@ public class OrderServiceImpl implements IOrderService {
                 dumpResponse(response);
 
                 // 需要修改为运行机器上的路径
-                String filePath = String.format("E://ftpfile/qr-%s.png",
+                //String filePath = String.format("E://ftpfile/qr-%s.png",
+                  //      response.getOutTradeNo());
+                String filePath = String.format("/ftpfile/img/qr-%s.png",
                         response.getOutTradeNo());
                 log.info("filePath:" + filePath);
                  ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);

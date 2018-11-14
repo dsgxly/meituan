@@ -52,4 +52,10 @@ public interface IUserService {
      */
     UserInfo findUserInfoByUserid(Integer id);
 
+    int updateTokenByUserId(Integer id, String token);
+
+    /**
+     * 根据生成的token查询用户信息
+     */
+    UserInfo findUserInfoByToken(String autoLoginToken);
 }

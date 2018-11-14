@@ -60,4 +60,6 @@ public interface IOrderService {
 
     //查询订单支付状态
     ServerResponse query_order_pay_status(Long orderNo);
+
+    void closeOrder(String date);
 }

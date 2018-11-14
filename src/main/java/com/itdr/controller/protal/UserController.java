@@ -5,10 +5,13 @@ import com.itdr.common.ServerResponse;
 import com.itdr.pojo.UserInfo;
 import com.itdr.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -28,8 +31,30 @@ public class UserController {
      * defaultValue = "zhangsan"  设置参数的默认值
      * */
     @RequestMapping(value = "/login.do")
-    public ServerResponse login(HttpSession session, @RequestParam(value = "username") String username,
-                                @RequestParam(value = "password") String password){
+    public ServerResponse login(HttpSession session,
+                                @RequestParam(value = "username") String username,
+                                @RequestParam(value = "password") String password,
+                                HttpServletResponse response){
+        ServerResponse serverResponse = userService.login(username,password);
+        if(serverResponse.isSuccess()){     //登录成功
+            UserInfo userInfo = (UserInfo) serverResponse.getData();
+            session.setAttribute(Const.CURRENTUSER,userInfo);
+            /*Cookie usernameCookie = new Cookie("username",userInfo.getUsername());
+            Cookie passwordCookie = new Cookie("password" ,userInfo.getPassword());
+            usernameCookie.setPath("/");
+            usernameCookie.setMaxAge(7*60*60*24);
+            passwordCookie.setPath("/");
+            passwordCookie.setMaxAge(7*60*60*24);
+            response.addCookie(usernameCookie);
+            response.addCookie(passwordCookie);*/
+        }
+
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "/login/{username}/{password}")
+    public ServerResponse login_restful(HttpSession session, @PathVariable("username") String username,
+                                @PathVariable("password") String password){
         ServerResponse serverResponse = userService.login(username,password);
         if(serverResponse.isSuccess()){     //登录成功
             UserInfo userInfo = (UserInfo) serverResponse.getData();
@@ -38,6 +63,7 @@ public class UserController {
 
         return serverResponse;
     }
+
     /**
      * 注册
      */
@@ -52,6 +78,12 @@ public class UserController {
      */
     @RequestMapping(value = "/forget_get_question.do")
     public ServerResponse forget_get_question(String username){
+        ServerResponse serverResponse = userService.forget_get_question(username);
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "/forget_get_question/{username}")
+    public ServerResponse forget_get_question_restful(@PathVariable("username") String username){
         ServerResponse serverResponse = userService.forget_get_question(username);
         return serverResponse;
     }
@@ -155,8 +187,19 @@ public class UserController {
      * 退出登录
      */
     @RequestMapping(value = "logout.do")
-    public ServerResponse logout(HttpSession session){
+    public ServerResponse logout(HttpSession session,HttpServletResponse response){
+
+      /*  UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        Cookie usernameCookie = new Cookie("username",userInfo.getUsername());
+        Cookie passwordCookie = new Cookie("password" ,userInfo.getPassword());
+        usernameCookie.setPath("/");
+        usernameCookie.setMaxAge(0);
+        passwordCookie.setPath("/");
+        passwordCookie.setMaxAge(0);
+        response.addCookie(usernameCookie);
+        response.addCookie(passwordCookie);*/
         session.removeAttribute(Const.CURRENTUSER);
+
         return ServerResponse.createBySuccess();
     }
 }

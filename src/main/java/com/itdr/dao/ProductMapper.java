@@ -64,4 +64,9 @@ public interface ProductMapper {
      * */
     List<Product> searchProduct(@Param("integerSet") Set<Integer> integerSet,
                                 @Param("keyword") String keyword);
+
+    /**
+     * 按照productId查询商品库存
+     * */
+    Integer findStockByProductId(Integer productId);
 }

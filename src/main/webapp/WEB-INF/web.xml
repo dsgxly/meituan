@@ -10,6 +10,22 @@
     <param-value>classpath:spring.xml</param-value>
   </context-param>
 
+<!--  &lt;!&ndash;解决中文乱码&ndash;&gt;
+  <filter>
+    <filter-name>setcharacter</filter-name>
+    <filter-class>
+      org.springframework.web.filter.CharacterEncodingFilter
+    </filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>setcharacter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>-->
+
   <!--step2；加载监听器-->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -17,7 +33,7 @@
 
   <!--step3:加载DispacherServlet-->
   <servlet>
-    <servlet-name>dispacherservlet</servlet-name>
+    <servlet-name>dispacherServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
@@ -25,7 +41,7 @@
     </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>dispacherservlet</servlet-name>
+    <servlet-name>dispacherServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 </web-app>

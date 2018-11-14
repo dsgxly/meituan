@@ -24,7 +24,7 @@ public class UploadController {
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse upload2(@RequestParam(value = "upload_file",required = false) MultipartFile file){
-        String path = "E:\\ftpfile";
+        String path = "E://ftpfile";
         return productService.upload(file,path);   //逻辑视图   前缀+逻辑视图+后缀  --> WEB-INF/jsp+upload+jsp
 
     }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping(value = "/mana/category")
+@RequestMapping(value = "/manage/category")
 public class CategoryManageController {
     @Autowired
     ICategoruService categoruService;
@@ -21,15 +21,7 @@ public class CategoryManageController {
      * 获取品类子节点（平级）
      * */
     @RequestMapping(value = "/get_category.do")
-    public ServerResponse get_category(HttpSession session,Integer categoryId){
-        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        if(userInfo==null){
-            return ServerResponse.createByError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
-        }
-        //判断用户权限（管理员才能操作后台）
-        if(userInfo.getRole()!=ResponseCode.ROLE_ADMIN.getCode()){
-            return ServerResponse.createByError(ResponseCode.NO_PRIVILEGE.getCode(),ResponseCode.NO_PRIVILEGE.getDesc());
-        }
+    public ServerResponse get_category(Integer categoryId){
         return categoruService.get_category(categoryId);
     }
 
@@ -37,17 +29,9 @@ public class CategoryManageController {
      * 增加节点
      * */
     @RequestMapping(value = "/add_category.do")
-    public ServerResponse add_category(HttpSession session,
-                                       @RequestParam(required = false,defaultValue = "0") Integer parentId,
+    public ServerResponse add_category(@RequestParam(required = false,defaultValue = "0") Integer parentId,
                                        String categoryName){
-        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        if(userInfo==null){
-            return ServerResponse.createByError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
-        }
-        //判断用户权限（管理员才能操作后台）
-        if(userInfo.getRole()!=ResponseCode.ROLE_ADMIN.getCode()){
-            return ServerResponse.createByError(ResponseCode.NO_PRIVILEGE.getCode(),ResponseCode.NO_PRIVILEGE.getDesc());
-        }
+
         return categoruService.add_category(parentId,categoryName);
     }
 
@@ -58,14 +42,6 @@ public class CategoryManageController {
     public ServerResponse set_category_name(HttpSession session,
                                             Integer categoryId,
                                             String categoryName){
-        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        if(userInfo==null){
-            return ServerResponse.createByError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
-        }
-        //判断用户权限（管理员才能操作后台）
-        if(userInfo.getRole()!=ResponseCode.ROLE_ADMIN.getCode()){
-            return ServerResponse.createByError(ResponseCode.NO_PRIVILEGE.getCode(),ResponseCode.NO_PRIVILEGE.getDesc());
-        }
         return categoruService.set_category_name(categoryId,categoryName);
     }
 
@@ -75,14 +51,6 @@ public class CategoryManageController {
     @RequestMapping(value = "/get_deep_category.do")
     public ServerResponse get_deep_category(HttpSession session,
                                             Integer categoryId){
-        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        if(userInfo==null){
-            return ServerResponse.createByError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
-        }
-        //判断用户权限（管理员才能操作后台）
-        if(userInfo.getRole()!=ResponseCode.ROLE_ADMIN.getCode()){
-            return ServerResponse.createByError(ResponseCode.NO_PRIVILEGE.getCode(),ResponseCode.NO_PRIVILEGE.getDesc());
-        }
         return categoruService.get_deep_category(categoryId);
     }
 }

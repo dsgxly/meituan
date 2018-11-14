@@ -1,14 +1,16 @@
 package com.itdr.test;
 
+import org.apache.commons.lang.time.DateUtils;
+
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Test {
 
     public static void main(String[] args) {
-        List list = Arrays.asList(new Object[]{"a","b","c"});
-        list.remove(0);
-        System.out.println(list);
+        String date = com.itdr.utils.DateUtils.dateToStr(DateUtils.addHours(new Date(),-1));
+        System.out.println(date);
     }
 
 

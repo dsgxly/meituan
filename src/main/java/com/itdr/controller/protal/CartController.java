@@ -6,6 +6,7 @@ import com.itdr.common.ServerResponse;
 import com.itdr.pojo.UserInfo;
 import com.itdr.service.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,10 +60,41 @@ public class CartController {
     }
 
     /**
+     * Restful风格
+     * 更新购物车中某个产品数量
+     * */
+    @RequestMapping(value = "/update/productId/{productId}/count/{count}")
+    public ServerResponse updateRestful(HttpSession session,
+                                        @PathVariable("productId") Integer productId,
+                                        @PathVariable("count") Integer count){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+        return cartService.update(userInfo.getId(),productId,count) ;
+    }
+
+    /**
      * 移除购物车中某个产品
      * */
     @RequestMapping(value = "/delete_product.do")
     public ServerResponse delete_product(HttpSession session,String productIds){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+        return cartService.delete_product(userInfo.getId(),productIds) ;
+    }
+
+
+    /**
+     * Restful风格
+     * 移除购物车中某个产品
+     * */
+    @RequestMapping(value = "/delete_product/productIds/{productIds}")
+    public ServerResponse delete_product_restful(HttpSession session,@PathVariable("productIds") String productIds){
 
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null){
@@ -82,6 +114,33 @@ public class CartController {
             return ServerResponse.createByError("请登录");
         }
         return cartService.select(userInfo.getId(),productId,ResponseCode.PRODUCT_CHECKED.getCode()) ;
+    }
+    /**
+     * Restful风格
+     * 购物车中选中某个商品
+     * */
+    @RequestMapping(value = "/select/productId/{productId}")
+    public ServerResponse select_restful(HttpSession session,@PathVariable("productId") Integer productId){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+        return cartService.select(userInfo.getId(),productId,ResponseCode.PRODUCT_CHECKED.getCode()) ;
+    }
+
+    /**
+     * Restful风格
+     * 购物车中取消选中某个商品
+     * */
+    @RequestMapping(value = "/un_select/productId/{productId}")
+    public ServerResponse un_select_restful(HttpSession session,@PathVariable("productId") Integer productId){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+        return cartService.select(userInfo.getId(),productId,ResponseCode.PRODUCT_UMCHECKED.getCode()) ;
     }
 
     /**
@@ -109,6 +168,7 @@ public class CartController {
         }
         return cartService.select(userInfo.getId(),null,ResponseCode.PRODUCT_CHECKED.getCode()) ;
     }
+
     /**
      * 购物车中取消全选
      * */

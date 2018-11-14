@@ -13,6 +13,7 @@ import com.itdr.vo.CartProductVO;
 import com.itdr.vo.CartVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CartServiceImpl implements ICartService {
     @Autowired
     ProductMapper productMapper;
 
+    @Transactional
     @Override
     public ServerResponse add(Integer userId, Integer productId, Integer count) {
 
@@ -69,6 +71,7 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(cartVO);
     }
 
+    @Transactional
     @Override
     public ServerResponse update(Integer userId, Integer productId, Integer count) {
 
@@ -89,6 +92,7 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(getCartVOLimit(userId));
     }
 
+    @Transactional
     @Override
     public ServerResponse delete_product(Integer userId, String productIds) {
 
@@ -134,80 +138,6 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(quantity);
     }
 
-    /* private CartVO getCartVOLimit(Integer userId){
-         CartVO cartVO = new CartVO();
-         //1.根据userId查询购物信息 --> List<Cart>
-         List<Cart> cartList = cartMapper.selectCartByUserId(userId);
-
-         //2.List<Cart> -->List<CartProductVO>
-         List<CartProductVO> cartProductVOList = Lists.newArrayList();
-
-         //购物车总价格
-         BigDecimal cartTotalPrice = new BigDecimal("0");
-         if(cartList!=null && cartList.size()>0){
-             for (Cart cart:cartList
-                  ) {
-                 CartProductVO cartProductVO = new CartProductVO();
-                 cartProductVO.setId(cart.getId());
-                 cartProductVO.setUserId(userId);
-                 cartProductVO.setQuantity(cart.getQuantity());
-                 cartProductVO.setProductChecked(cart.getChecked());
-
-                 //查询商品
-                 Product product = productMapper.selectByPrimaryKey(cart.getId());
-                 if(product!=null){
-                     cartProductVO.setId(cart.getId());
-                     cartProductVO.setProductMainImage(product.getMainImage());
-                     cartProductVO.setProductName(product.getName());
-                     cartProductVO.setProductPrice(product.getPrice());
-                     cartProductVO.setProductStatus(product.getStatus());
-                     cartProductVO.setProductStock(product.getStock());
-                     int stock = product.getStock();
-                     int limitProductCount=0;
-                     if(stock>cart.getQuantity()){
-                         limitProductCount=cart.getQuantity();
-                         cartProductVO.setLimitQuantity("LIMIT_NUM_SUCCESS");
-                     }else {  //商品库存不足
-                         limitProductCount=stock;
-                         //更新购物车中商品的数量
-                         Cart cart1 = new Cart();
-                         cart1.setQuantity(stock);
-                         cart1.setProductId(cart.getProductId());
-                         cart1.setChecked(cart.getChecked());
-                         cart1.setUserId(userId);
-                         cart1.setId(cart.getId());
-                         cartMapper.updateByPrimaryKey(cart1);
-                         cartProductVO.setLimitQuantity("LIMIT_NUM_FAIL");
-                     }
-                     cartProductVO.setProductSubtitle(product.getSubtitle());
-                     cartProductVO.setQuantity(limitProductCount);
-                     cartProductVO.setProductTotalPrice(BigDecimalUtils.mul(product.getPrice().doubleValue(),Double.valueOf(cartProductVO.getQuantity())));
-                 }
-                 //计算选中商品的总价
-                 //if(cartProductVO.getProductChecked()==ResponseCode.PRODUCT_CHECKED.getCode()) {
-                     cartTotalPrice = BigDecimalUtils.add(cartTotalPrice.doubleValue(), cartProductVO.getProductTotalPrice().doubleValue());
-                 //}
-                 cartProductVOList.add(cartProductVO);
-             }
-
-         }
-         //3.计算购物车总价格
-
-         cartVO.setCartProductVOList(cartProductVOList);
-         cartVO.setCartTotalPrice(cartTotalPrice);
-
-         //4.判断购物车是否全选
-         int count = cartMapper.isCheckedAll(userId);
-         if(count>0){
-             cartVO.setAllChecked(false);
-         }else {
-             cartVO.setAllChecked(true);
-         }
-         //5.返回结果
-
-         return cartVO;
-     }
- }*/
     private CartVO getCartVOLimit(Integer userId) {
         CartVO cartVO = new CartVO();
         //step1:根据userId查询购物信息--》LIST<Cart>

@@ -3,6 +3,7 @@ package com.itdr.common;
 public class Const {
     public static final String CURRENTUSER="currentuser";
     public static final String TRADE_SUCCESS="TRADE_SUCCESS";
+    public static final String AUTOLOGINTOKEN="autologintoken";
     public enum PaymentPlatformEnum{
         ALIPAY(1,"支付宝")
         ;

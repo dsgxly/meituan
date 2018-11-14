@@ -6,6 +6,7 @@ import com.itdr.pojo.Shopping;
 import com.itdr.pojo.UserInfo;
 import com.itdr.service.IShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,16 @@ public class ShoppingController {
 
         return shoppingService.del(userInfo.getId(),shoppingId);
     }
+    @RequestMapping(value = "/del/shoppingId/{shoppingId}")
+    public ServerResponse del_restful(HttpSession session, @PathVariable("shoppingId") Integer shoppingId){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+
+        return shoppingService.del(userInfo.getId(),shoppingId);
+    }
 
     /**
      * 登录状态更新地址
@@ -65,6 +76,16 @@ public class ShoppingController {
      * */
     @RequestMapping(value = "/select.do")
     public ServerResponse select(HttpSession session, Integer shoppingId){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("请登录");
+        }
+
+        return shoppingService.select(shoppingId);
+    }
+    @RequestMapping(value = "/select/shoppingId/{shoppingId}")
+    public ServerResponse select_restful(HttpSession session, @PathVariable("shoppingId") Integer shoppingId){
 
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null){

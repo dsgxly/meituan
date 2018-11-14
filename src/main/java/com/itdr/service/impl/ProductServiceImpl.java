@@ -20,6 +20,7 @@ import com.itdr.vo.ProductDetailVO;
 import com.itdr.vo.ProductListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -38,6 +39,7 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ICategoruService categoruService;
 
+    @Transactional
     @Override
     public ServerResponse saveOrUpdate(Product product) {
 
@@ -76,6 +78,7 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
+    @Transactional
     @Override
     public ServerResponse set_sale_status(Integer productId, Integer status) {
 
@@ -134,7 +137,7 @@ public class ProductServiceImpl implements IProductService {
         productDetailVO.setImageHost(PropertiesUtils.readByKey("imageHost"));
         productDetailVO.setName(product.getName());
         productDetailVO.setMainImage(product.getMainImage());
-        productDetailVO.setId(product.getId());
+        productDetailVO.setCategoryId(product.getCategoryId());
         productDetailVO.setPrice(product.getPrice());
         productDetailVO.setStatus(product.getStatus());
         productDetailVO.setStock(product.getStock());
@@ -236,6 +239,7 @@ public class ProductServiceImpl implements IProductService {
 
         File file1 = new File(path,newFileName);
         try {
+
             file.transferTo(file1);
             //将图片上传到图片服务器。。。。
 

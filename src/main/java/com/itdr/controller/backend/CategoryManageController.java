@@ -6,6 +6,7 @@ import com.itdr.common.ServerResponse;
 import com.itdr.pojo.UserInfo;
 import com.itdr.service.ICategoruService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,10 @@ public class CategoryManageController {
     public ServerResponse get_category(Integer categoryId){
         return categoruService.get_category(categoryId);
     }
+    @RequestMapping(value = "/get_category/{categoryId}")
+    public ServerResponse get_category_restful(@PathVariable("categoryId") Integer categoryId){
+        return categoruService.get_category(categoryId);
+    }
 
     /**
      * 增加节点
@@ -39,8 +44,7 @@ public class CategoryManageController {
      * 修改节点
      * */
     @RequestMapping(value = "/set_category_name.do")
-    public ServerResponse set_category_name(HttpSession session,
-                                            Integer categoryId,
+    public ServerResponse set_category_name(Integer categoryId,
                                             String categoryName){
         return categoruService.set_category_name(categoryId,categoryName);
     }
@@ -49,8 +53,7 @@ public class CategoryManageController {
      * 获取当前分类id及递归子节点categoryId
      * */
     @RequestMapping(value = "/get_deep_category.do")
-    public ServerResponse get_deep_category(HttpSession session,
-                                            Integer categoryId){
+    public ServerResponse get_deep_category(Integer categoryId){
         return categoruService.get_deep_category(categoryId);
     }
 }

@@ -58,4 +58,21 @@ public class UserManagerController {
         return serverResponse;
     }
 
+    /**
+     * 后台-管理员退出登录
+     */
+    @RequestMapping(value = "logout.do")
+    public ServerResponse logout(HttpSession session,HttpServletResponse response){
+
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+
+        Cookie logoutCookie = new Cookie(Const.AUTOLOGINTOKEN,userInfo.getToken());
+        logoutCookie.setMaxAge(0);
+        logoutCookie.setPath("/");
+        response.addCookie(logoutCookie);
+        userService.deleteTokenByUserId(userInfo.getId());
+        session.removeAttribute(Const.CURRENTUSER);
+        return ServerResponse.createBySuccess();
+    }
+
 }

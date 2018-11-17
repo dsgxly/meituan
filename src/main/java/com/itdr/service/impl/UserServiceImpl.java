@@ -6,6 +6,7 @@ import com.itdr.dao.UserInfoMapper;
 import com.itdr.pojo.UserInfo;
 import com.itdr.service.IUserService;
 import com.itdr.utils.MD5Utils;
+import com.itdr.utils.RedisUtils;
 import com.itdr.utils.TokenCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,7 +124,10 @@ public class UserServiceImpl implements IUserService {
         //3.服务端要生成一个token保存，并将token返回给客户端
         String forgetToken = UUID.randomUUID().toString();      //防止用户横向越权修改别人密码
         //guava cache
-        TokenCache.set(username,forgetToken);
+        //TokenCache.set(username,forgetToken);
+
+        RedisUtils.set(username,forgetToken);
+
         return ServerResponse.createBySuccess(forgetToken);
     }
 
@@ -143,7 +147,8 @@ public class UserServiceImpl implements IUserService {
         }
 
         //2.校验token
-        String token = TokenCache.get(username);
+        //String token = TokenCache.get(username);
+        String token = RedisUtils.get(username);
         if(token==null){
             return ServerResponse.createByError("token已经过期");
         }
@@ -257,6 +262,11 @@ public class UserServiceImpl implements IUserService {
             return  null;
         }
         return userInfoMapper.findUserInfoByToken(autoLoginToken);
+    }
+
+    @Override
+    public int deleteTokenByUserId(Integer id) {
+        return userInfoMapper.deleteTokenByUserId(id);
     }
 
 

@@ -17,7 +17,7 @@ public class CloseOrder {
     @Autowired
     IOrderService orderService;
 
-    @Scheduled(cron ="0 0 */10 * * * ")  //每隔10分钟执行一次
+    @Scheduled(cron ="0 0/5 * * * * ")  //每隔30s执行一次
     public void closerOrder(){
         System.out.println("关闭订单");
         Integer hour = Integer.parseInt(PropertiesUtils.readByKey("close.order.time"));

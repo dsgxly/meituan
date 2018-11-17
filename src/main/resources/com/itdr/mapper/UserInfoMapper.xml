@@ -138,10 +138,17 @@
     <update id="updateTokenByUserId" parameterType="map">
         update neuedu_user set token = #{token} where id = #{userId}
     </update>
+
     <select id="findUserInfoByToken" parameterType="string" resultMap="BaseResultMap">
-        select id, username, password, email, phone, question, answer, role, create_time,
-        update_time
+        select id, username, password, email, phone, question, answer, role, create_time,update_time
         from neuedu_user
         where token = #{token}
     </select>
+
+    <update id="deleteTokenByUserId" parameterType="int">
+        update neuedu_user
+        set token=null
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
 </mapper>

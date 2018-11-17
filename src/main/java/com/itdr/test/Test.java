@@ -1,16 +1,12 @@
 package com.itdr.test;
 
-import org.apache.commons.lang.time.DateUtils;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import redis.clients.jedis.Jedis;
 
 public class Test {
 
-    public static void main(String[] args) {
-        String date = com.itdr.utils.DateUtils.dateToStr(DateUtils.addHours(new Date(),-1));
-        System.out.println(date);
+    public static void main(String[] args){
+        Jedis jedis = new Jedis("39.105.36.227",6379);
+        System.out.println(jedis.ping());
     }
 
 

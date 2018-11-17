@@ -89,4 +89,6 @@ public interface UserInfoMapper {
                             @Param("token") String token);
 
     UserInfo findUserInfoByToken(String token);
+
+    int deleteTokenByUserId(Integer id);
 }

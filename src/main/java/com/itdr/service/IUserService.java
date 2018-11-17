@@ -58,4 +58,9 @@ public interface IUserService {
      * 根据生成的token查询用户信息
      */
     UserInfo findUserInfoByToken(String autoLoginToken);
+
+    /**
+     * 根据用户Id删除用户token
+     * */
+    int deleteTokenByUserId(Integer id);
 }

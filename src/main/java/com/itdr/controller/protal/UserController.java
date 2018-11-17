@@ -96,6 +96,13 @@ public class UserController {
         ServerResponse serverResponse = userService.forget_check_answer(username,question,answer);
         return serverResponse;
     }
+    @RequestMapping(value = "/forget_check_answer/{username}/{question}/{answer}")
+    public ServerResponse forget_check_answer_restul(@PathVariable("username") String username,
+                                                     @PathVariable("question") String question,
+                                                     @PathVariable("answer") String answer){
+        ServerResponse serverResponse = userService.forget_check_answer(username,question,answer);
+        return serverResponse;
+    }
     /**
      * 忘记密码重置密码
      */
@@ -105,11 +112,27 @@ public class UserController {
 
         return serverResponse;
     }
+    @RequestMapping(value = "/forget_reset_password/{username}/{newpassword}/{forgetToken}")
+    public ServerResponse forget_reset_password_restful(@PathVariable("username") String username,
+                                                        @PathVariable("newpassword") String newpassword,
+                                                        @PathVariable("forgetToken") String forgetToken){
+        ServerResponse serverResponse = userService.forget_reset_password(username,newpassword,forgetToken);
+
+        return serverResponse;
+    }
+
     /**
      * 检查用户名或者邮箱是否有效
      */
     @RequestMapping(value = "check_valid.do")
     public ServerResponse check_valid(String str,String type){
+        ServerResponse serverResponse = userService.check_valid(str,type);
+
+        return serverResponse;
+    }
+    @RequestMapping(value = "check_valid/{str}/{type}")
+    public ServerResponse check_valid_restful(@PathVariable("str") String str,
+                                              @PathVariable("type") String type){
         ServerResponse serverResponse = userService.check_valid(str,type);
 
         return serverResponse;
@@ -143,6 +166,16 @@ public class UserController {
      */
     @RequestMapping(value = "reset_password.do")
     public ServerResponse reset_password(HttpSession session,String passwordOld, String passwordNew){
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
+        if(userInfo==null){
+            return ServerResponse.createByError("用户未登录");
+        }
+        return userService.reset_password(userInfo.getUsername(),passwordOld,passwordNew);
+    }
+    @RequestMapping(value = "reset_password/{passwordOld}/{passwordNew}")
+    public ServerResponse reset_password_restful(HttpSession session,
+                                                 @PathVariable("passwordOld") String passwordOld,
+                                                 @PathVariable("passwordNew") String passwordNew){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null){
             return ServerResponse.createByError("用户未登录");
@@ -188,16 +221,6 @@ public class UserController {
      */
     @RequestMapping(value = "logout.do")
     public ServerResponse logout(HttpSession session,HttpServletResponse response){
-
-      /*  UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENTUSER);
-        Cookie usernameCookie = new Cookie("username",userInfo.getUsername());
-        Cookie passwordCookie = new Cookie("password" ,userInfo.getPassword());
-        usernameCookie.setPath("/");
-        usernameCookie.setMaxAge(0);
-        passwordCookie.setPath("/");
-        passwordCookie.setMaxAge(0);
-        response.addCookie(usernameCookie);
-        response.addCookie(passwordCookie);*/
         session.removeAttribute(Const.CURRENTUSER);
 
         return ServerResponse.createBySuccess();

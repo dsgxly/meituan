@@ -52,7 +52,8 @@
             <!-- manage下的所有-->
             <mvc:mapping path="/manage/**"/>
             <!-- 不拦截-->
-           <mvc:exclude-mapping path="/manage/user/login.do"/>
+            <mvc:exclude-mapping path="/manage/user/login.do"/>
+            <mvc:exclude-mapping path="/manage/user/logout.do"/>
 
             <bean class="com.itdr.controller.common.interceptor.AuthorityInterceptor"></bean>
 
